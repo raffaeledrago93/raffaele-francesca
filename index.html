@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raffaele & Francesca</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: #f8f5ef;
+      color: #2f2924;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview {
+      width: 100%;
+      max-width: 900px;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 18px 45px rgba(33, 27, 23, 0.10);
+      position: relative;
+      background: #f8f5ef;
+      padding: 56px 20px;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .preview::before {
+      content: "EDIZIONE SPECIALE";
+      position: absolute;
+      top: 18px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.32em;
+      font-size: 0.78rem;
+      color: #6e655e;
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 52px 24px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(255,255,255,0.65);
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      font-size: 0.76rem;
+      margin-bottom: 18px;
+      color: #5f5750;
+    }
+
+    .title {
+      margin: 0;
+      line-height: 1.08;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 500;
+    }
+
+    .subtitle {
+      max-width: 580px;
+      margin: 24px auto 0;
+      line-height: 1.85;
+      font-size: 1.05rem;
+      color: #5f5750;
+    }
+
+    .divider {
+      width: 96px;
+      height: 1px;
+      margin: 34px auto;
+      background: linear-gradient(to right, transparent, #2d2722, transparent);
+    }
+
+    .iban-box {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 28px 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(255,255,255,0.72);
+    }
+
+    .label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 10px;
+      font-family: Arial, sans-serif;
+      color: #5f5750;
+    }
+
+    .holder {
+      font-size: 1rem;
+      line-height: 1.75;
+      margin-bottom: 18px;
+    }
+
+    .iban {
+      font-family: "Courier New", monospace;
+      font-size: clamp(1rem, 2.4vw, 1.28rem);
+      line-height: 1.7;
+      word-break: break-word;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: #fbfaf8;
+    }
+
+    .actions {
+      margin-top: 22px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 14px 24px;
+      font-size: 0.96rem;
+      cursor: pointer;
+      transition: 0.2s ease;
+      border: 1px solid #2f2924;
+      background: transparent;
+      color: #2f2924;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      background: #2f2924;
+      color: #fff;
+    }
+
+    .feedback {
+      margin-top: 14px;
+      min-height: 1.2em;
+      font-size: 0.93rem;
+      color: #5f5750;
+    }
+
+    .footer {
+      margin-top: 34px;
+      line-height: 1.85;
+      font-size: 1rem;
+      color: #5f5750;
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 14px; }
+      .preview { padding: 40px 14px; }
+      .panel { padding: 38px 18px; }
+      .subtitle, .footer, .holder { font-size: 0.98rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="preview editorial">
+    <main class="panel">
+      <div class="eyebrow">24 luglio 2026 • Il nostro giorno speciale</div>
+      <h1 class="title">Raffaele &amp; Francesca</h1>
+      <p class="subtitle">
+        La vostra presenza sarà per noi la notizia più bella. Per chi desidera accompagnarci
+        anche con un pensiero, qui è possibile visualizzare e copiare il nostro IBAN in modo semplice e discreto.
+      </p>
+      <div class="divider"></div>
+      <section class="iban-box">
+        <div class="label">Intestatari</div>
+        <div class="holder">Raffaele Drago e Francesca Camporeale</div>
+        <div class="label">IBAN</div>
+        <div class="iban" id="iban">IT79X0200841562000430761719</div>
+        <div class="actions">
+          <button class="btn" type="button" id="copyButton">Copia IBAN</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+      </section>
+      <p class="footer">
+        Grazie di cuore per il vostro affetto e per essere parte di questo momento così importante.
+      </p>
+    </main>
+  </div>
+
+  <script>
+    const iban = "IT79X0200841562000430761719";
+    const button = document.getElementById("copyButton");
+    const feedback = document.getElementById("feedback");
+
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(iban);
+        feedback.textContent = "IBAN copiato con successo.";
+      } catch (error) {
+        feedback.textContent = "Copia non riuscita. Puoi selezionare l'IBAN manualmente.";
+      }
+    });
+  </script>
+</body>
+</html>
